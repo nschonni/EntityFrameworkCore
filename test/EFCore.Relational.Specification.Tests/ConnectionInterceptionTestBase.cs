@@ -262,6 +262,7 @@ namespace Microsoft.EntityFrameworkCore
         {
             public DbContext Context { get; set; }
             public Exception Exception { get; set; }
+            public Guid ContextId { get; set; }
             public Guid ConnectionId { get; set; }
             public bool AsyncCalled { get; set; }
             public bool SyncCalled { get; set; }
@@ -275,6 +276,7 @@ namespace Microsoft.EntityFrameworkCore
             {
                 Context = null;
                 Exception = null;
+                ContextId = default;
                 ConnectionId = default;
                 AsyncCalled = false;
                 SyncCalled = false;
@@ -402,8 +404,10 @@ namespace Microsoft.EntityFrameworkCore
             {
                 Assert.NotNull(eventData.Context);
                 Assert.NotEqual(default, eventData.ConnectionId);
+                Assert.NotEqual(default, eventData.Context.ContextId);
 
                 Context = eventData.Context;
+                ContextId = Context.ContextId;
                 ConnectionId = eventData.ConnectionId;
                 OpeningCalled = true;
             }
@@ -412,6 +416,7 @@ namespace Microsoft.EntityFrameworkCore
             {
                 Assert.Same(Context, eventData.Context);
                 Assert.Equal(ConnectionId, eventData.ConnectionId);
+                Assert.Equal(ContextId, eventData.Context.ContextId);
 
                 OpenedCalled = true;
             }
@@ -420,8 +425,10 @@ namespace Microsoft.EntityFrameworkCore
             {
                 Assert.NotNull(eventData.Context);
                 Assert.NotEqual(default, eventData.ConnectionId);
+                Assert.NotEqual(default, eventData.Context.ContextId);
 
                 Context = eventData.Context;
+                ContextId = Context.ContextId;
                 ConnectionId = eventData.ConnectionId;
                 ClosingCalled = true;
             }
@@ -430,6 +437,7 @@ namespace Microsoft.EntityFrameworkCore
             {
                 Assert.Same(Context, eventData.Context);
                 Assert.Equal(ConnectionId, eventData.ConnectionId);
+                Assert.Equal(ContextId, eventData.Context.ContextId);
 
                 ClosedCalled = true;
             }
@@ -438,6 +446,7 @@ namespace Microsoft.EntityFrameworkCore
             {
                 Assert.Same(Context, eventData.Context);
                 Assert.Equal(ConnectionId, eventData.ConnectionId);
+                Assert.Equal(ContextId, eventData.Context.ContextId);
                 Assert.NotNull(eventData.Exception);
 
                 Exception = eventData.Exception;

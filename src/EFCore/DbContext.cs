@@ -137,6 +137,21 @@ namespace Microsoft.EntityFrameworkCore
         }
 
         /// <summary>
+        ///     <para>
+        ///         A unique identifier for this specific <see cref="DbContext" /> instance.
+        ///     </para>
+        ///     <para>
+        ///         This identifier is primarily intended as a correlation ID for logging and debugging such
+        ///         that it is easy to identify that multiple events are using the same context instance.
+        ///     </para>
+        ///     <para>
+        ///         Note that this can be useful in identifying in the debugger when the same context is being used from
+        ///         multiple threads, which is not supported since <see cref="DbContext" /> instances are not thread-safe.
+        ///     </para>
+        /// </summary>
+        public virtual Guid ContextId { get; } = Guid.NewGuid();
+
+        /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
         ///     the same compatibility standards as public APIs. It may be changed or removed without notice in
         ///     any release. You should only use it directly in your code with extreme caution and knowing that
@@ -206,7 +221,8 @@ namespace Microsoft.EntityFrameworkCore
         ///     doing so can result in application failures when updating to a new Entity Framework Core release.
         /// </summary>
         [EntityFrameworkInternal]
-        IDiagnosticsLogger<DbLoggerCategory.Infrastructure> IDbContextDependencies.InfrastructureLogger => DbContextDependencies.InfrastructureLogger;
+        IDiagnosticsLogger<DbLoggerCategory.Infrastructure> IDbContextDependencies.InfrastructureLogger
+            => DbContextDependencies.InfrastructureLogger;
 
         /// <summary>
         ///     This is an internal API that supports the Entity Framework Core infrastructure and not subject to
@@ -477,7 +493,7 @@ namespace Microsoft.EntityFrameworkCore
         {
             if (ChangeTracker.AutoDetectChangesEnabled)
             {
-                 entry.DetectChanges();
+                entry.DetectChanges();
             }
         }
 
@@ -862,7 +878,7 @@ namespace Microsoft.EntityFrameworkCore
         ///         to anything other than the CLR default for the property type.
         ///     </para>
         ///     <para>
-        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged"/>.
+        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged" />.
         ///     </para>
         ///     <para>
         ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
@@ -905,7 +921,7 @@ namespace Microsoft.EntityFrameworkCore
         ///         to anything other than the CLR default for the property type.
         ///     </para>
         ///     <para>
-        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified"/>.
+        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified" />.
         ///     </para>
         ///     <para>
         ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
@@ -1066,7 +1082,7 @@ namespace Microsoft.EntityFrameworkCore
         ///         to anything other than the CLR default for the property type.
         ///     </para>
         ///     <para>
-        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged"/>.
+        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged" />.
         ///     </para>
         ///     <para>
         ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
@@ -1107,7 +1123,7 @@ namespace Microsoft.EntityFrameworkCore
         ///         to anything other than the CLR default for the property type.
         ///     </para>
         ///     <para>
-        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified"/>.
+        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified" />.
         ///     </para>
         ///     <para>
         ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
@@ -1238,7 +1254,7 @@ namespace Microsoft.EntityFrameworkCore
         ///         to anything other than the CLR default for the property type.
         ///     </para>
         ///     <para>
-        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged"/>.
+        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged" />.
         ///     </para>
         ///     <para>
         ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
@@ -1275,7 +1291,7 @@ namespace Microsoft.EntityFrameworkCore
         ///         to anything other than the CLR default for the property type.
         ///     </para>
         ///     <para>
-        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified"/>.
+        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified" />.
         ///     </para>
         ///     <para>
         ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
@@ -1393,7 +1409,7 @@ namespace Microsoft.EntityFrameworkCore
         ///         to anything other than the CLR default for the property type.
         ///     </para>
         ///     <para>
-        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged"/>.
+        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Unchanged" />.
         ///     </para>
         ///     <para>
         ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
@@ -1430,7 +1446,7 @@ namespace Microsoft.EntityFrameworkCore
         ///         to anything other than the CLR default for the property type.
         ///     </para>
         ///     <para>
-        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified"/>.
+        ///         For entity types without generated keys, the state set is always <see cref="EntityState.Modified" />.
         ///     </para>
         ///     <para>
         ///         Use <see cref="EntityEntry.State" /> to set the state of only a single entity.
@@ -1532,7 +1548,8 @@ namespace Microsoft.EntityFrameworkCore
         /// <param name="keyValues">The values of the primary key for the entity to be found.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>The entity found, or null.</returns>
-        public virtual ValueTask<object> FindAsync([NotNull] Type entityType, [CanBeNull] object[] keyValues, CancellationToken cancellationToken)
+        public virtual ValueTask<object> FindAsync(
+            [NotNull] Type entityType, [CanBeNull] object[] keyValues, CancellationToken cancellationToken)
         {
             CheckDisposed();
 
